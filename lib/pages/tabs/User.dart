@@ -9,8 +9,10 @@ class User extends StatefulWidget {
 class _UserState extends State<User> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-       child: Text('user'),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('用户中心'),
+      ),
     );
   }
 }

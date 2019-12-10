@@ -1,28 +1,56 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import '../../serives/ScreenAdaper.dart';
+import '../../model/FocusModel.dart';
+import 'package:dio/dio.dart';
+import '../../config/Config.dart';
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
 
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
   var itemWidth = (ScreenAdper.width(ScreenAdper.getScreenWidth())-30)/2;
-
+  
   @override
   void initState() { 
     super.initState();
-    print(ScreenAdper.getScreenWidth());
+    this._getFocusData();
+    // print(ScreenAdper.getScreenWidth());
   }
+
+  
+
   List<Map> _imgList = [
     {"url": "https://www.itying.com/images/flutter/slide01.jpg"},
     {"url": "https://www.itying.com/images/flutter/slide02.jpg"},
     {"url": "https://www.itying.com/images/flutter/slide03.jpg"}
   ];
+
+  List<Result> focusList = [];
+
+  _getFocusData() async{
+    Response response = await Dio().get(Config.domain+'/api/focus');
+    setState(() {
+     
+
+    });
+     var focus = response.data;
+     FocusModel focusmodel = FocusModel.fromJson(focus);
+
+     print(focusmodel);
+     setState(() {
+       focusList = focusmodel.result;
+     });
+   
+  }
   Widget _swiperWedget() {
     return Container(
-      child: AspectRatio(
+      margin: EdgeInsets.all(10),
+      child: ClipRRect(
+        borderRadius: BorderRadius.all(Radius.circular(20)),
+        child: AspectRatio(
         aspectRatio: 2/1,
         child: new Swiper(
           itemBuilder: (BuildContext context, int index) {
@@ -37,6 +65,7 @@ class _HomePageState extends State<HomePage> {
           // control: new SwiperControl(),
         ),
       ),
+        )
     );
   }
 
@@ -57,7 +86,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _HotProductList(){
+  Widget _hotProductList(){
     return Container(
             margin: EdgeInsets.only(left:ScreenAdper.height(20) ,right:ScreenAdper.width(20)),
             height: ScreenAdper.height(170),
@@ -125,14 +154,52 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {   
     ScreenAdper.init(context);
 
-    return Container(
+    return Scaffold(
+       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.center_focus_weak,size: 28,color: Colors.black87),
+          onPressed: null,
+        ),
+        title: InkWell(
+          splashColor:Colors.transparent,
+          child: Container(
+            padding: EdgeInsets.only(left: 20),
+            height: ScreenAdper.height(55),
+            decoration: BoxDecoration(
+              color: Color.fromRGBO(233, 233, 233, 0.8),
+              borderRadius: BorderRadius.circular(30)
+            ),
+            child: Row(
+              children: <Widget>[
+                Icon(Icons.search),
+                Text('笔记本电脑',style: TextStyle(fontSize: ScreenAdper.size(28)),)
+              ],
+            ),
+          ),
+          onTap: (){
+            Navigator.pushNamed(context, '/search');
+          },
+        ),
+        actions: <Widget>[
+          IconButton(
+            icon: IconButton(
+              icon: Icon(Icons.message,size: 28,color: Colors.black87,),
+            ),
+            onPressed: (){
+              
+            },
+
+          )
+        ],
+      ),
+      body: Container(
       child: ListView(
         children: <Widget>[
           _swiperWedget(),
           SizedBox(height: ScreenAdper.height(20),),
           _titleWidget("猜你喜欢"),
           SizedBox(height: ScreenAdper.height(20),),
-          _HotProductList(),
+          _hotProductList(),
           SizedBox(height: ScreenAdper.height(20),),
           _titleWidget("热门推荐"),
           SizedBox(height: ScreenAdper.height(20),),
@@ -146,13 +213,18 @@ class _HomePageState extends State<HomePage> {
                 _recProduceListWidget(),
                 _recProduceListWidget(),
                 _recProduceListWidget(),
-                 _recProduceListWidget(),
+                _recProduceListWidget(),
               ],
             )
           )
           
         ],
       ),
+    ),
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

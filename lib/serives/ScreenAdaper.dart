@@ -19,4 +19,8 @@ class ScreenAdper{
   static getScreenHeight(){
     return ScreenUtil.screenHeight;
   }
+
+  static size(double value){
+    return ScreenUtil(allowFontScaling: true).setSp(value);
+  }
 }

@@ -10,7 +10,7 @@ class _CartState extends State<Cart> {
   @override
   Widget build(BuildContext context) {
     return Container(
-       child: Text('xcart'),
+       child: Text('x'),
     );
   }
 }

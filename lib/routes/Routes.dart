@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
-
-
+import '../pages/Search.dart';
+import '../pages/ProductList.dart';
+import '../pages/ProductContent.dart';
 // 配置路由
 final routes = {
     // '/course': (context, {arguments}) => CoursePage(
     //       arguments: arguments,
     //     )
+    '/content':(context)=> ProductContentPage(),
+    '/productList':(context,{arguments})=> ProductListPage(arguments:arguments),
+     '/search':(context)=>SearchPage()
 };
 
 var onGenerateRoute=(RouteSettings settings) {
